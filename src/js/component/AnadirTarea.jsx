@@ -20,21 +20,23 @@ const AnadirTarea = () => {
          //actualiza el estado anadirTarea cada vez que se ejecute una tecla (e.t ->input donde esta escribiendo / e.t.v --lo que contiene el input)
         if (evento.key === 'Enter' && anadirTarea.trim() !== '') { //si la tecla es Enter y el input no está vacío...
             anadirTareaService(usuario_servicio, anadirTarea)
-            .then (nuevaTarea => {
-                setListaTareas([...listaTareas, nuevaTarea]);
+            .then (() => {
                 setAnadirTarea("");
+                return obtenerTareasServices(usuario_servicio);
+            })
+            .then(data => {
+                if (Array.isArray(data.todos)) {
+                    setListaTareas(data.todos);
+                } else {
+                    console.error("La respuesta no es un array de tareas:", data);
+                }
             })
             .catch(error => {
                 console.log("Error al añadir tarares: "+error);
             });
         
 
-            // //-----------------------------------------------------------------------------------------------//
-            // //¡¡API!! --> se añade el primer servicio que es añadirTarea. Se importa arriba. 
-            // //recibe mi nombre de usuario (tom) y la tarea que recibe en la linea 19.
-            // anadirTareaService(usuario_servicio, anadirTarea)
-            // //-----------------------------------------------------------------------------------------------//
-            // setAnadirTarea("") //deja el input vacío
+
         }
     };
     ////////////////////////////////////// API  MOSTRAR TAREAS ///////////////////////////////////////////////////
