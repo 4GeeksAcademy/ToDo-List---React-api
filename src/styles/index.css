@@ -12,3 +12,9 @@ h1{
 }
 
 
+.botonEliminarTodo{
+  display: flex !important;
+  align-items: start !important;
+  justify-content: start !important;
+}
+

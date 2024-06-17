@@ -77,24 +77,44 @@ const eliminarTareaService = (todo_id) => {
         //     'Content-Type': 'application/json'
         // }
     })
-    .then(respuesta => {
-        if (!respuesta.ok) {
-            throw new Error('No fue ok ' + respuesta.statusText)
-        }
-        return respuesta.json()
+        .then(respuesta => {
+            if (!respuesta.ok) {
+                throw new Error('No fue ok ' + respuesta.statusText)
+            }
+            return respuesta.json()
 
-    })
-    .then(datosRespuesta => {
-        console.log(datosRespuesta);
-        return datosRespuesta;
-    })
-    .catch(esError => {  
-        console.log('Error: ' + esError);
-    })
+        })
+        .then(datosRespuesta => {
+            console.log(datosRespuesta);
+            return datosRespuesta;
+        })
+        .catch(esError => {
+            console.log('Error: ' + esError);
+        })
 }
-export  {eliminarTareaService}
+export { eliminarTareaService }
 
 
+const eliminarTodoService = (user_name) => {
+    return fetch(`${ApiUrl}${obtener}${user_name}`, {
+        method: 'DELETE',
+    })
+        .then(respuesta => {
+            if (!respuesta.ok) {
+                throw new Error('No fue ok ' + respuesta.statusText)
+            }
+            return respuesta
+
+        })
+        .then(datosRespuesta => {
+            console.log(datosRespuesta);
+            return datosRespuesta;
+        })
+        .catch(esError => {
+            console.log('Error: ' + esError);
+        })
+}
+export { eliminarTodoService }
 
 
 

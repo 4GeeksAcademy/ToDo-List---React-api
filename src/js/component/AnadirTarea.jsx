@@ -3,6 +3,7 @@ import '../../styles/anadirTarea.css';
 import { anadirTareaService } from "../services/services";
 import { obtenerTareasServices } from "../services/services";
 import { eliminarTareaService } from "../services/services";
+import {eliminarTodoService} from "../services/services";
 
 const AnadirTarea = () => {
 
@@ -69,6 +70,7 @@ const AnadirTarea = () => {
     }
 
 
+
     //Contador de tareas
     useEffect(() => {
         setTotalTareas(listaTareas.length)
@@ -91,7 +93,8 @@ const AnadirTarea = () => {
                 {listaTareas.length === 0 ? (<p className="mt-2 ms-2">No hay tareas, agrega una</p>) : (
                     <ul>
                         {listaTareas.map((tareaNueva) => (
-                            <li className="enTarea" key={tareaNueva.id}>{tareaNueva.label}
+                            <li className="enTarea" key={tareaNueva.id}>
+                                {tareaNueva.label}
                                 <span
                                     className="close-icon"
                                     onClick={() => eliminarTarea(tareaNueva.id)}
