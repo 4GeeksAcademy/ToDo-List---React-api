@@ -1,7 +1,9 @@
-// services/services.js
+
+//Variables para montar la url del fetch//
 const ApiUrl = 'https://playground.4geeks.com/todo';
 const postToDo = '/todos/';
 const obtener = '/users/'
+const stVacio = "";
 
 /******************************
  * 
@@ -18,7 +20,7 @@ const obtener = '/users/'
  */
 const anadirTareaService = (user_name, label) => {
     return fetch(`${ApiUrl}${postToDo}${user_name}`, {
-        method: 'POST',
+        method: 'POST', //metodo para enviar algún dato al servidor, en este caso la tarea
         headers: {
             'Content-Type': 'application/json',
         },
@@ -72,25 +74,28 @@ export { obtenerTareasServices };
 
 const eliminarTareaService = (todo_id) => {
     return fetch(`${ApiUrl}${postToDo}${todo_id}`, {
-        method: 'DELETE',
-        // headers: {
-        //     'Content-Type': 'application/json'
-        // }
+        method: 'DELETE'
     })
         .then(respuesta => {
             if (!respuesta.ok) {
                 throw new Error('No fue ok ' + respuesta.statusText)
             }
-            return respuesta.json()
+            // Verifica si la respuesta tiene contenido
+            if (respuesta.status === 204 || respuesta.headers.get('Content-Length') === '0') {
+                return {}; // Devuelve un objeto vacío si no hay contenido
+            }
+            return respuesta.json(); // Intenta analizar como JSON si hay contenido
 
         })
         .then(datosRespuesta => {
             console.log(datosRespuesta);
             return datosRespuesta;
         })
+
         .catch(esError => {
             console.log('Error: ' + esError);
-        })
+            throw esError; // Opcionalmente, vuelve a lanzar el error para manejarlo en otros lugares
+        });
 }
 export { eliminarTareaService }
 
@@ -107,6 +112,34 @@ const eliminarTodoService = (user_name) => {
 
         })
         .then(datosRespuesta => {
+            alert("Usuario eliminado: " + datosRespuesta);
+            return crearUsuarioService(user_name)
+        })
+
+        .then(datosRespuesta => {
+            return datosRespuesta
+        })
+
+        .catch(esError => {
+            console.log('Error: ' + esError);
+        })
+}
+export { eliminarTodoService }
+
+
+
+const crearUsuarioService = (user_name) => {
+    return fetch(`${ApiUrl}${obtener}${user_name}`, {
+        method: 'POST',
+    })
+        .then(respuesta => {
+            if (!respuesta.ok) {
+                throw new Error('No fue ok ' + respuesta.statusText)
+            }
+            return respuesta
+
+        })
+        .then(datosRespuesta => {
             console.log(datosRespuesta);
             return datosRespuesta;
         })
@@ -114,7 +147,29 @@ const eliminarTodoService = (user_name) => {
             console.log('Error: ' + esError);
         })
 }
-export { eliminarTodoService }
+export { crearUsuarioService }
+
+
+const obtenerListaUsuariosService = () => {
+    return fetch(`${ApiUrl}${obtener}`, {
+        method: 'GET'
+    })
+        .then(respuesta => {
+            if (!respuesta.ok) {
+                throw new Error('No fue ok ' + respuesta.statusText)
+            }
+            return respuesta.json()
+
+        })
+        .then(datosRespuesta => {
+            console.log(datosRespuesta);
+            return datosRespuesta;
+        })
+        .catch(esError => {
+            console.log('Error: ' + esError);
+        })
+}
+export { obtenerListaUsuariosService }
 
 
 

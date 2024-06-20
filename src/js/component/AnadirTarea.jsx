@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import '../../styles/anadirTarea.css';
-import { anadirTareaService } from "../services/services";
-import { obtenerTareasServices } from "../services/services";
-import { eliminarTareaService } from "../services/services";
-import {eliminarTodoService} from "../services/services";
+import { anadirTareaService, crearUsuarioService, obtenerTareasServices, eliminarTareaService, eliminarTodoService, obtenerListaUsuariosService } from "../services/services";
 
 const AnadirTarea = () => {
 
@@ -12,34 +9,36 @@ const AnadirTarea = () => {
     const [sinTareas, setSinTareas] = useState(false);
     const [totalTareas, setTotalTareas] = useState(0);
     const usuario_servicio = 'tom';
-    const recogerTarea = (evento) => {
-        setAnadirTarea(evento.target.value);
-    }
+
+    //Función para recoger el string de la tarea en el input//
+    const recogerTarea = (evento) => { setAnadirTarea(evento.target.value) };
 
 
+
+
+    //Función para manejar la tecla Enter al introducir una tarea//
     const pulsarIntro = (evento) => { //evento: usado  para cuando ocurre un evento en el navegador, en este caso referido a una tecla.
-         //actualiza el estado anadirTarea cada vez que se ejecute una tecla (e.t ->input donde esta escribiendo / e.t.v --lo que contiene el input)
+        //actualiza el estado anadirTarea cada vez que se ejecute una tecla (e.t ->input donde esta escribiendo / e.t.v --lo que contiene el input)
         if (evento.key === 'Enter' && anadirTarea.trim() !== '') { //si la tecla es Enter y el input no está vacío...
             anadirTareaService(usuario_servicio, anadirTarea)
-            .then (() => {
-                setAnadirTarea("");
-                return obtenerTareasServices(usuario_servicio);
-            })
-            .then(data => {
-                if (Array.isArray(data.todos)) {
-                    setListaTareas(data.todos);
-                } else {
-                    console.error("La respuesta no es un array de tareas:", data);
-                }
-            })
-            .catch(error => {
-                console.log("Error al añadir tarares: "+error);
-            });
-        
-
-
+                .then(() => {
+                    setAnadirTarea(""); //limpia el input después de añadir la tarea. 
+                    return obtenerTareasServices(usuario_servicio);
+                })
+                .then(data => {
+                    if (Array.isArray(data.todos)) {
+                        setListaTareas(data.todos); //actualiza la lista con las tareas obtenidas
+                    } else {
+                        console.error("No es un array de tareas:", data);
+                    }
+                })
+                .catch(error => {
+                    console.log("Error al añadir tarares: " + error);
+                });
         }
     };
+
+    
     ////////////////////////////////////// API  MOSTRAR TAREAS ///////////////////////////////////////////////////
     useEffect(() => {
         // Obtiene las tareas al montar el componente
@@ -52,9 +51,6 @@ const AnadirTarea = () => {
                 }
 
             })
-            .catch(error => {
-                console.error("Error al obtener tareas:", error);
-            });
     }, [usuario_servicio]);
 
 
