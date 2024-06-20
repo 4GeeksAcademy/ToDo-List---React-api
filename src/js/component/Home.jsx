@@ -14,28 +14,32 @@ const Home = () => {
 	
 
 	useEffect(() => {
-        obtenerListaUsuariosService()
-            .then(usuarios => {
-                setListaUsuarios(usuarios.users);
-            })
-            .catch(error => {
-                console.error('Error al obtener la lista de usuarios:', error);
-            });
-    }, []);
-
+		obtenerListaUsuariosService()
+			.then(usuarios => {
+				setListaUsuarios(usuarios.users); // Suponiendo que usuarios es un array de objetos con propiedades, incluyendo name
+			})
+			.catch(error => {
+				console.error('Error al obtener la lista de usuarios:', error);
+			});
+	}, []); // El array vacío asegura que esto se ejecute una sola vez al montar el componente
+	
 	useEffect(() => {
-		const usuarioYaCreado = listaUsuarios.find(usuario => usuario.name === usuario_servicio);
-		console.log('usuario encontrado: '+usuarioYaCreado);
-		if (!usuarioYaCreado) {
-			crearUsuarioService(usuario_servicio)
-				.then(() => {
-					console.log(`${usuario_servicio} ha sido creado.`);
-				})
-				.catch(error => {
-					console.error('Error al crear el usuario:', error);
-				});
+		if (listaUsuarios.length > 0) {
+			const usuarioYaCreado = listaUsuarios.find(usuario => usuario.name === usuario_servicio);
+			console.log('Usuario encontrado:', usuarioYaCreado);
+	
+			if (!usuarioYaCreado) {
+				crearUsuarioService(usuario_servicio)
+					.then(() => {
+						console.log(`${usuario_servicio} ha sido creado.`);
+					})
+					.catch(error => {
+						console.error('Error al crear el usuario:', error);
+					});
+			}
 		}
-	}, [listaUsuarios]);
+	}, [listaUsuarios]); // Este efecto se ejecuta cada vez que listaUsuarios cambia
+	
 
 
 
