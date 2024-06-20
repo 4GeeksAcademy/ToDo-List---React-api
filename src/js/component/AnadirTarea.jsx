@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import '../../styles/anadirTarea.css';
-import { anadirTareaService, crearUsuarioService, obtenerTareasServices, eliminarTareaService, eliminarTodoService, obtenerListaUsuariosService } from "../services/services";
+import { anadirTareaService, obtenerTareasServices, eliminarTareaService } from "../services/services";
 
 const AnadirTarea = () => {
 
     const [anadirTarea, setAnadirTarea] = useState(""); //creamos la variable que nos permitirá añadir una tarea, la inicializamos con string vacío
     const [listaTareas, setListaTareas] = useState([]); //creamos la variable que almanecena el listado de tareas en un array vacio
-    const [sinTareas, setSinTareas] = useState(false);
     const [totalTareas, setTotalTareas] = useState(0);
     const usuario_servicio = 'tom';
 
@@ -38,8 +37,9 @@ const AnadirTarea = () => {
         }
     };
 
-    
+
     ////////////////////////////////////// API  MOSTRAR TAREAS ///////////////////////////////////////////////////
+    //hace que se vaya mostrando la lista de tareas según se van añadiendo. 
     useEffect(() => {
         // Obtiene las tareas al montar el componente
         obtenerTareasServices(usuario_servicio)
@@ -54,7 +54,7 @@ const AnadirTarea = () => {
     }, [usuario_servicio]);
 
 
-    ////////////////////////////////////// API  ELIMINAR UNA TAREA ///////////////////////////////////////////////////
+    ////////////////////////////////////// API  ELIMINAR UNA SOLA TAREA ///////////////////////////////////////////////////
     const eliminarTarea = (todo_id) => {
         eliminarTareaService(todo_id)
             .then(() => {
@@ -65,15 +65,12 @@ const AnadirTarea = () => {
             });
     }
 
-
-
     //Contador de tareas
     useEffect(() => {
         setTotalTareas(listaTareas.length)
     }, [listaTareas])
 
-
-
+    /////////////////////////////////////////// CUERPO DE AÑADIR TAREA //////////////////////////////////////////////////////////
     return (
         <div className="d-flex flex-column align-items-center">
             <div className="bloc">

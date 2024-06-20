@@ -7,12 +7,13 @@ import { eliminarTodoService, crearUsuarioService, obtenerListaUsuariosService }
 
 const Home = () => {
 
+	//Variables a usar
 	const usuario_servicio = "tom";
 	const [listaUsuarios, setListaUsuarios] = useState([]);
-	const [anadirTarea, setAnadirTarea] = useState(""); //creamos la variable que nos permitirá añadir una tarea, la inicializamos con string vacío
-	const [listaTareas, setListaTareas] = useState([]); //creamos la variable que almanecena el listado de tareas en un array vacio.
 	
 
+	//Llama al servicio obtenerListaUsuariosService, la cual nos proprciona los usuarios creados y los pasa a setListaUsuario.
+	//Comprueba si hay algún error con el catch
 	useEffect(() => {
 		obtenerListaUsuariosService()
 			.then(usuarios => {
@@ -21,8 +22,22 @@ const Home = () => {
 			.catch(error => {
 				console.error('Error al obtener la lista de usuarios:', error);
 			});
-	}, []); // El array vacío asegura que esto se ejecute una sola vez al montar el componente
-	
+	}, []); // array vacío: sólo se ejecuta una vez, cuando se carga la página o se actualiza 
+
+
+	//comprueba el array de listaUsuarios: si tiene más de 0 índices (no está vacio el array),
+	//crea una variable que va a obtener el resultado de buscar(find) un usuario concreto de la listaUsuarios. 
+	//dentro de la función find se crea una variable llamada usuario, que está recibiendo a través de listaUsuarios.find
+	//un array de objetos, y el dato que nos interesa es el name. Los objetos de este array tienen el siguiente formato:
+	/**
+	 * 
+	 * {
+      	"name": "tom",
+      	"id": 14
+    	},
+	 */
+	//Si el usuarioYaCreado no existe, se llama al servicio crearUsuarioService y le pasamos la variable "tom"
+	//El control de errores ya se está haciendo también en el propio servicio de crearUsuarioService
 	useEffect(() => {
 		if (listaUsuarios.length > 0) {
 			const usuarioYaCreado = listaUsuarios.find(usuario => usuario.name === usuario_servicio);
@@ -43,7 +58,9 @@ const Home = () => {
 
 
 
-	//construimos la función que eliminará al usuario y todas sus tareas
+	//construimos la función que eliminará al usuario y todas sus tareas y hace una actualización de la página con window.location.reload();
+	//Crea una variable que llama a una ventana para confirmar si queremos eliminar todo. 
+	//Si confirmamos, llama a eliminarTodoService pásandole usuario y actualiza lá pagina. 
 	const eliminarTodo = () => {
 		const confirmacionEliminarTodo = window.confirm("Esta acción borrará el usuario y sus tareas"); //confirm: hace pregunta cerrada
 
@@ -53,8 +70,6 @@ const Home = () => {
 					console.log('DatosRespuesta' + datosRespuesta); //aquí esta llegando ok
 
 					window.location.reload();
-
-					// return crearUsuarioService(usuario_servicio)
 				})
 				.catch(error => {
 					console.error('Error:', error);
